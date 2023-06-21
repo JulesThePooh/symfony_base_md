@@ -107,3 +107,102 @@
                       'class' => 'truc'
                   ]
               ]);```
+- Pour traité le formulaire dans votre controller suivez l'exemple suivant : 
+- ```
+    //creation d'un nouveau genre
+        $genre = new Genre();
+
+
+        //use App\Form\GenreType;
+        $form = $this->createForm(GenreType::class, $genre);
+
+        //dire au formulaire d'écouter la request
+        // (récupérer les paramètres POST GET etc)
+        $form->handleRequest($request);
+
+        //gerer la soumission et validation de notre formulaire
+        if ($form->isSubmitted() && $form->isValid()) {
+
+
+            $this->entityManager->persist($genre);
+            $this->entityManager->flush();
+
+
+            $this->redirectToRoute('app_genre_add');
+        }
+  ```
+- pensez bien à envoyer votre formulaire à votre vue, puis l'affiché, comme ceci : 
+- ```
+  //App/Controller/MyController.php
+     return $this->render('genre/index.html.twig', [
+            //creer la vue du formulaire et le donner à twig
+            'form' => $form->createView()
+        ]);
+  ```
+- Dans votre vue : 
+  - ```
+    //templates/genre/index.html.twig
+    {% block body %}
+      {#    commencer l'affichage du formulaire #}
+      {{ form_start(form) }}
+
+
+      {#    Ajout d'un bouton pour pouvoir submit le form #}
+      <button type="submit">Valider</button>
+
+
+      {#    finir l'affichage du formulaire #}
+      {{ form_end(form) }}
+    {% endblock %}
+    ```
+### Gestion des entitées avec un formulaire Symfony ###
+- Afin de gérer les relation avec vos entitées dans votre formulaire, vous pouvez suivre cet exemple : 
+  - Tout va se passer au sein de votre Type.
+- ```
+  //App\Form\MovieType
+              ->add('genre', EntityType::class, [
+                'class' => Genre::class,
+                'choice_label' => 'label',
+            ])
+  ```
+  - Dans l'exemple, genre est une entitée, vous devez utiliser EntityType pour dire à Symfony que vous allez relier une entitée, puis dans les options :
+    - la class : qui représente les entitées qui vont etre affiché
+    - le choice_label : qui représente quelle propriété de votre entitée doit être affiché
+- Dans le cas d'une collections, ajouter l'option multiple à true pour gérer des tableaux.
+
+### Gestion de la connexion utilisateur ###
+- La connexion/ déconnexion/enregistrement d'utilisateur est automatique dans Symfony, il vous faire ces 3 commandes : 
+- ```symfony console make:user```
+- ```symfony console make:auth (!!!`Lors de l'utilisation de make:auth, mettez "no" quand il vous demande l'envoi de mail)```
+- ```symfony console make:registration-form```
+
+- Ces 3 commandes vont vous générer : 
+  - Toute la logique permettant la connexion l'enregistrement et la deconnexion
+  - Un formulaire d'enregistrement et un formulaire de connexion
+  - Ainsi que 3 routes : 
+    - app_login : qui vous permet d'arriver à votre formulaire de connexion
+    - app_logout : qui vous permet de vous déconnecter
+    - app_register : qui vous permet d'enregistrer un utilisateur
+
+### Utiliser le user connecté ou déconnecté avec twig et controller ###
+- En twig vous pouvez récupérer l'utilisateur connecté de cette manière : 
+- ```app.user```
+- Un petit exemple d'utilisation : 
+- ```
+  {% if app.user %}
+    <p>je suis connecté en tant que {{ app.user.email }}</p>
+  {% else %}
+    <p>je ne suis pas connecté</p>
+  {% endif %}
+  ```
+- Dans un controller, vous pouvez récupérer l'utilisateur connecté de cette manière : 
+- ``` $user = $this->getUser() ```
+- Comme en twig si l'utilisateur est connecté ça va vous rendre votre Objet User sinon ça vous rend null
+- Exemple concret dans un controller : 
+- ```
+  $user = $this->getUser();
+  if($user === null){
+    return $this->redirectToRoute('app_login')
+  }
+  ```
+    - Dans l'exemple ci dessus, si l'utilisateur n'est pas connecté on le redirige vers le formulaire de connexion.
