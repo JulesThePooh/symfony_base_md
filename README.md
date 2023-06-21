@@ -94,4 +94,16 @@
 - commande qui permet de générer un formulaire : ```symfony console make:form```
   - La commande va vous demander ensuite le nom de votre formulaire (par convention ils doivent finir par Type), ex : MovieType
   - Ensuite il vous demande sur quelle entitée il doit etre basé (laissé vide si il n'est pas relié à une entité).
-- 
+- Votre formulaire est maintenant créer vous pouvez le retrouver dans src/Form
+- Dans votre formulaire vous pouvez gérer le types de champs de vos paramètres, rendez vous sur cette doc : https://symfony.com/doc/current/reference/forms/types.html
+- Voici un exemple formulaire simple :
+  - ```
+    $builder
+              // BIEN CELUI CI : use Symfony\Component\Form\Extension\Core\Type\TextType;
+              ->add('label', TextType::class, [
+                  'label' => "Je suis un nouveau label",
+                  'attr' => [
+                      'placeholder' => 'Truc',
+                      'class' => 'truc'
+                  ]
+              ]);```
