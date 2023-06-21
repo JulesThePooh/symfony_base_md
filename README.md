@@ -88,3 +88,10 @@
   - Récupérer l'entité que vous voulez supprimer grace à son repository
   - Puis utiliser l'entityManager : $entityManager->remove()
   - N'oubliez pas le flush à la fin : $entityManager->flush()
+
+### Les formulaires avec Symfony ###
+- Un formulaire peux être basé sur une entité ou non, il sera basé sur une entité si vous avez besoin de CREER ou de MODIFIER une entité.
+- commande qui permet de générer un formulaire : ```symfony console make:form```
+  - La commande va vous demander ensuite le nom de votre formulaire (par convention ils doivent finir par Type), ex : MovieType
+  - Ensuite il vous demande sur quelle entitée il doit etre basé (laissé vide si il n'est pas relié à une entité).
+- 
