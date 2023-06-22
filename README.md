@@ -293,3 +293,29 @@
     </div>
   
   ```
+  
+### Gerer les assets avec symfony ###
+- Installation du bundle webpack-encore de symfony : https://symfony.com/doc/current/frontend/encore/installation.html
+- ```composer require symfony/webpack-encore-bundle```
+- ```yarn```
+- Une fois les commandes effectué, supprimer tous vos fichiers et dossier dans le dossier assets.
+- Ajouter vous le fichier de script : ```assets/script/script.js```
+- Ajouter vous le fichier de style scss : ```assets/style/index.scss```
+- Rendez vous maintenant dans le fichier ```webpack.config.js```
+  - Le ```.addEntry()``` vous permet d'ajouter des script, si on suit notre config, mettez : 
+    - ```.addEntry('main_script', './assets/script/index.js')```
+  - Pour le css, vous avez besoin de ```.addStyleEntry()```, exemple : 
+      - ```.addStyleEntry('main_style', './assets/style/index.scss')```
+- Afin que webpack gère le scss, décommenté la ligne : ```.enableSassLoader()```
+- Dernière étape, rendez-vous dans votre base.html.twig et ajouté les entries configurées juste avant, à savoir : 
+- ```
+      {% block stylesheets %}
+        {{ encore_entry_link_tags('main_style') }}
+    {% endblock %}
+
+    {% block javascripts %}
+        {{ encore_entry_script_tags('main_script') }}
+    {% endblock %}
+  ```
+- Lancer la commande : ```yarn watch```
+  - Il va surement vous dire d'installer la dépendance pour le sass, copier coller la commande, puis relancer ```yarn watch```.
